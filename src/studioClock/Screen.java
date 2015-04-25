@@ -53,6 +53,7 @@ public class Screen extends JPanel {
 
         Date currentDate = new Date();
         int seconds = currentDate.getSeconds();
+        int minutes = currentDate.getMinutes();
         //if(seconds == 0)
         //    seconds = 60;
 
@@ -60,14 +61,25 @@ public class Screen extends JPanel {
         String strMinutes = String.format("%02d", currentDate.getMinutes());
         String strSeconds = String.format("%02d", currentDate.getSeconds());
 
-        int radius = Math.min((getWidth()-30) / 2, (getHeight()-30) / 2);
+        int radius = Math.min((getWidth() - 30) / 2, (getHeight() - 30) / 2);
         int centerX = getWidth() / 2;
         int centerY = getHeight() / 2;
 
-        drawCircle(graphics2D, centerX, centerY, radius, 60, radius / 20, seconds);
-        drawCircle(graphics2D, centerX, centerY, (int) (radius * 0.9), 12, radius / 20, 20);
+        Color darkRedLight = new Color(120, 0, 0);
+        Color redLight = new Color(201, 0, 0);
+        Color darkBuleLight = new Color(0, 0, 80);
+        Color blueLight = new Color(0, 0, 129);
+        Color darkLight = new Color(15, 15, 15);
 
-        Font textFont = new Font("DS-DIGITAL", Font.PLAIN, (int)(radius*0.55));
+        drawCircle(graphics2D, centerX, centerY, radius, 60, radius / 20, 60, darkLight); // Seconds
+        drawCircle(graphics2D, centerX, centerY, radius, 12, radius / 20, 12, darkRedLight);
+        drawCircle(graphics2D, centerX, centerY, radius, 60, radius / 20, seconds, redLight);
+        drawCircle(graphics2D, centerX, centerY, (int) (radius * 0.92), 60, radius / 20, 60, darkLight); // Minutes
+        drawCircle(graphics2D, centerX, centerY, (int) (radius * 0.92), 12, radius / 20, 12, darkBuleLight);
+        drawCircle(graphics2D, centerX, centerY, (int) (radius * 0.92), 60, radius / 20, minutes, blueLight);
+
+        graphics2D.setColor(redLight);
+        Font textFont = new Font("DS-DIGITAL", Font.PLAIN, (int)(radius*0.52));
         graphics2D.setFont(textFont);
         FontMetrics fontMetrics = graphics2D.getFontMetrics();
         int stringWidth = fontMetrics.stringWidth(strHours + ":" + strMinutes);
@@ -77,17 +89,17 @@ public class Screen extends JPanel {
         graphics2D.drawString(strSeconds, (getWidth()-stringWidth)/2, (int)(getHeight()*0.8));
     }
 
-    public void drawCircle(Graphics2D graphics2D, int xCenter, int yCenter, int radius, int nrBullets, int bulletSize, int darkAt) {
+    public void drawCircle(Graphics2D graphics2D, int xCenter, int yCenter, int radius, int nrBullets, int bulletSize, int darkAt, Color lightColor) {
         int x;
         int y;
         int degreesPerStep = 360/nrBullets;
 
-        graphics2D.setColor(Color.RED);
+        graphics2D.setColor(lightColor);
         //System.out.println(darkAt);
 
         for(int i=0;i<nrBullets;i++) {
             if(i > darkAt)
-                graphics2D.setColor(new Color(100, 0, 0));
+                break;
 
             x = (int)((radius * Math.cos(Math.toRadians((i*degreesPerStep)-90))) + xCenter);
             y = (int)((radius * Math.sin(Math.toRadians((i*degreesPerStep)-90))) + yCenter);
